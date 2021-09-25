@@ -50,10 +50,6 @@ X = X.apply(spell_autocorrect)
 X
 
 
-# In[ ]:
-
-
-X.to_csv('spell_autocorrect')
 
 
 # In[ ]:
@@ -70,10 +66,6 @@ X = X.apply(lemmatization)
 X
 
 
-# In[ ]:
-
-
-X.to_csv('lemmatization')
 
 
 # In[ ]:
@@ -93,10 +85,6 @@ X = X.apply(remove_html_tags)
 X
 
 
-# In[ ]:
-
-
-X.to_csv('remove_html_tags')
 
 
 # In[ ]:
