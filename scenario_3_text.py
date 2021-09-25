@@ -30,13 +30,22 @@ df = pd.read_csv("base_clean")
 # In[3]:
 
 
-df.head(4)
 X = df.text
 y = df.label
 
 
 # In[ ]:
 
+def remove_html_tags(text):
+        unicode = unidecode.unidecode(text)
+        stop = remove_stopwords(unicode)
+        twitter = re.sub(pattern=r'@[A-Za-z0-9]+',repl=' ', string=stop)
+        html = re.sub(pattern=r'<.*?>', repl=' ', string=twitter)
+        urls = re.sub(pattern=r'https?://\S+|www\.\S+', repl=' ', string=html)
+        special_ch = re.sub(pattern='[^a-zA-Z]',repl=' ',string=urls)
+        special_cha= re.sub(pattern='\[[^]]*\]', repl=' ', string=special_ch)
+        lower = special_cha.lower()
+        return lower
 
 def spell_autocorrect(text):
         correct_spell_words = []
@@ -46,24 +55,13 @@ def spell_autocorrect(text):
             correct_spell_words.append(correct_word)
         correct_spelling = correct_spell_words
         return correct_spelling
-X = X.apply(spell_autocorrect)
-X
-
-
-
-
-# In[ ]:
-
-
-lemma = WordNetLemmatizer()
 
 def lemmatization(tokens):
+        lemma = WordNetLemmatizer()
         for index in range(len(tokens)):
             lemma_word = lemma.lemmatize(tokens[index])
             tokens[index] = lemma_word
         return ' '.join(tokens)
-X = X.apply(lemmatization)
-X
 
 
 
@@ -71,18 +69,6 @@ X
 # In[ ]:
 
 
-def remove_html_tags(text):
-        unicode = unidecode.unidecode(text)
-        stop = remove_stopwords(unicode)
-        twitter = re.sub(pattern=r'@[A-Za-z0-9]+',repl=' ', string=unicode)
-        html = re.sub(pattern=r'<.*?>', repl=' ', string=twitter)
-        urls = re.sub(pattern=r'https?://\S+|www\.\S+', repl=' ', string=html)
-        special_ch = re.sub(pattern='[^a-zA-Z]',repl=' ',string=urls)
-        special_cha= re.sub(pattern='\[[^]]*\]', repl=' ', string=special_ch)
-        lower = special_cha.lower()
-        return special_cha
-X = X.apply(remove_html_tags)
-X
 
 
 
@@ -195,7 +181,7 @@ X_kfold_tfidf = tfidf.transform(df.text)
 # In[ ]:
 
 
-X_kfold_count = count_vectorizer.fit_transform(df.text)
+X_kfold_count = count_vectorizer.transform(df.text)
 
 
 # In[ ]:
